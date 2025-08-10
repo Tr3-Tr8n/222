@@ -7,7 +7,7 @@ st.set_page_config(page_title="Sơn Tùng M-TP Fanpage", page_icon="🎤", layou
 
 
 st.sidebar.image(
-    "https://upload.wikimedia.org/wikipedia/commons/4/4c/S%C6%A1n_T%C3%B9ng_M-TP_2017.png",
+    "https://rbeatz.com/wp-content/uploads/Son-Tung-M-TP-2.png",
     use_column_width=True
 )
 st.sidebar.title("🌟 Sơn Tùng M-TP")
