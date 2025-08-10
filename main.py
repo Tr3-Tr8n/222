@@ -39,11 +39,7 @@ st.image("https://i.ytimg.com/vi/knW7-x7Y7RE/maxresdefault.jpg", use_column_widt
 # ========================
 st.header("🎵 Bài hát yêu thích")
 
-songs = {
-    "Chạy Ngay Đi": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",  # Thay bằng file mp3 thật
-    "Hãy Trao Cho Anh": "https://samplelib.com/lib/preview/mp3/sample-6s.mp3",
-    "Nơi Này Có Anh": "https://samplelib.com/lib/preview/mp3/sample-9s.mp3"
-}
+
 
 for song_name, song_url in songs.items():
     st.subheader(f"🎧 {song_name}")
