@@ -5,9 +5,7 @@ import streamlit as st
 # ========================
 st.set_page_config(page_title="Sơn Tùng M-TP Fanpage", page_icon="🎤", layout="wide")
 
-# ========================
-# Sidebar - Thông tin ca sĩ
-# ========================
+
 st.sidebar.image(
     "https://upload.wikimedia.org/wikipedia/commons/4/4c/S%C6%A1n_T%C3%B9ng_M-TP_2017.png",
     use_column_width=True
@@ -28,32 +26,6 @@ st.sidebar.markdown("📷 [Instagram](https://www.instagram.com/sontungmtp/) | �
 st.markdown("<h1 style='text-align: center; color: #FF4B4B;'>🎶 Sơn Tùng M-TP 🎶</h1>", unsafe_allow_html=True)
 st.image("https://i.ytimg.com/vi/knW7-x7Y7RE/maxresdefault.jpg", use_column_width=True)
 
-# ========================
-# Timeline sự nghiệp (Expander)
-# ========================
-with st.expander("📅 Timeline Sự Nghiệp", expanded=False):
-    timeline = {
-        "2012": "Ra mắt ca khúc 'Cơn mưa ngang qua' và trở nên nổi tiếng.",
-        "2015": "Ra mắt 'Âm thầm bên em', đạt hàng chục triệu view.",
-        "2017": "'Lạc trôi' và 'Nơi này có anh' phá kỷ lục YouTube Việt Nam.",
-        "2019": "'Hãy trao cho anh' hợp tác với Snoop Dogg, gây tiếng vang quốc tế.",
-        "2021": "Ra mắt 'Muộn rồi mà sao còn' đạt hàng triệu view trong vài giờ."
-    }
-    for year, event in timeline.items():
-        st.write(f"**{year}** - {event}")
-
-# ========================
-# Mục Bài hát yêu thích (Expander)
-# ========================
-with st.expander("🎵 Bài hát yêu thích", expanded=False):
-    songs = {
-        "Chạy Ngay Đi": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",
-        "Hãy Trao Cho Anh": "https://samplelib.com/lib/preview/mp3/sample-6s.mp3",
-        "Nơi Này Có Anh": "https://samplelib.com/lib/preview/mp3/sample-9s.mp3"
-    }
-    for song_name, song_url in songs.items():
-        st.subheader(f"🎧 {song_name}")
-        st.audio(song_url)
 
 # ========================
 # Mục MV yêu thích (Expander)
@@ -62,7 +34,7 @@ with st.expander("🎬 MV yêu thích", expanded=False):
     mvs = {
         "Chạy Ngay Đi": "https://www.youtube.com/watch?v=32sYGCOYJUM",
         "Hãy Trao Cho Anh": "https://www.youtube.com/watch?v=knW7-x7Y7RE",
-        "Nơi Này Có Anh": "https://www.youtube.com/watch?v=I3izrLn-sz8"
+        "Nơi Này Có Anh": "https://www.youtube.com/watch?v=FN7ALfpGxiI&ab_channel=S%C6%A1nT%C3%B9ngM-TPOfficial"
     }
     cols = st.columns(len(mvs))
     for i, (mv_name, mv_url) in enumerate(mvs.items()):
