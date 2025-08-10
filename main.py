@@ -51,7 +51,7 @@ st.header("🎬 MV yêu thích")
 mvs = {
     "Chạy Ngay Đi": "https://www.youtube.com/watch?v=32sYGCOYJUM",
     "Hãy Trao Cho Anh": "https://www.youtube.com/watch?v=knW7-x7Y7RE",
-    "Nơi Này Có Anh": "https://www.youtube.com/watch?v=I3izrLn-sz8"
+    "Nơi Này Có Anh": "https://www.youtube.com/watch?v=FN7ALfpGxiI&ab_channel=S%C6%A1nT%C3%B9ngM-TPOfficial"
 }
 
 cols = st.columns(len(mvs))
@@ -69,16 +69,7 @@ st.table({
     "Tên Album/Single": ["Lạc Trôi", "Hãy Trao Cho Anh", "Muộn Rồi Mà Sao Còn"]
 })
 
-# ========================
-# Fan quotes
-# ========================
 
-
-
-
-# ========================
-# Form góp ý
-# ========================
 st.header("📝 Góp ý của bạn")
 with st.form("feedback_form"):
     name = st.text_input("Tên của bạn")
