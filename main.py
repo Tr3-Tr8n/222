@@ -10,7 +10,7 @@ st.set_page_config(page_title="Sơn Tùng M-TP Fanpage", page_icon="🎤", layou
 # ========================
 st.sidebar.image(
     "https://upload.wikimedia.org/wikipedia/commons/4/4c/S%C6%A1n_T%C3%B9ng_M-TP_2017.png",
-    use_container_width==True
+    use_column_width=True
 )
 st.sidebar.title("🌟 Sơn Tùng M-TP")
 st.sidebar.write("""
@@ -29,51 +29,75 @@ st.markdown("<h1 style='text-align: center; color: #FF4B4B;'>🎶 Sơn Tùng M-T
 st.image("https://i.ytimg.com/vi/knW7-x7Y7RE/maxresdefault.jpg", use_column_width=True)
 
 # ========================
-# Timeline sự nghiệp
+# Timeline sự nghiệp (Expander)
 # ========================
-
-
-
-# ========================
-# Mục Bài hát yêu thích
-# ========================
-st.header("🎵 Bài hát yêu thích")
-
-
-
-
-
-# ========================
-# Mục MV yêu thích
-# ========================
-st.header("🎬 MV yêu thích")
-
-mvs = {
-    "Chạy Ngay Đi": "https://www.youtube.com/watch?v=32sYGCOYJUM",
-    "Hãy Trao Cho Anh": "https://www.youtube.com/watch?v=knW7-x7Y7RE",
-    "Nơi Này Có Anh": "https://www.youtube.com/watch?v=FN7ALfpGxiI&ab_channel=S%C6%A1nT%C3%B9ngM-TPOfficial"
-}
-
-cols = st.columns(len(mvs))
-for i, (mv_name, mv_url) in enumerate(mvs.items()):
-    with cols[i]:
-        st.subheader(f"📺 {mv_name}")
-        st.video(mv_url)
+with st.expander("📅 Timeline Sự Nghiệp", expanded=False):
+    timeline = {
+        "2012": "Ra mắt ca khúc 'Cơn mưa ngang qua' và trở nên nổi tiếng.",
+        "2015": "Ra mắt 'Âm thầm bên em', đạt hàng chục triệu view.",
+        "2017": "'Lạc trôi' và 'Nơi này có anh' phá kỷ lục YouTube Việt Nam.",
+        "2019": "'Hãy trao cho anh' hợp tác với Snoop Dogg, gây tiếng vang quốc tế.",
+        "2021": "Ra mắt 'Muộn rồi mà sao còn' đạt hàng triệu view trong vài giờ."
+    }
+    for year, event in timeline.items():
+        st.write(f"**{year}** - {event}")
 
 # ========================
-# Album
+# Mục Bài hát yêu thích (Expander)
 # ========================
-st.header("💿 Album & Single")
-st.table({
-    "Năm": [2017, 2019, 2021],
-    "Tên Album/Single": ["Lạc Trôi", "Hãy Trao Cho Anh", "Muộn Rồi Mà Sao Còn"]
-})
+with st.expander("🎵 Bài hát yêu thích", expanded=False):
+    songs = {
+        "Chạy Ngay Đi": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",
+        "Hãy Trao Cho Anh": "https://samplelib.com/lib/preview/mp3/sample-6s.mp3",
+        "Nơi Này Có Anh": "https://samplelib.com/lib/preview/mp3/sample-9s.mp3"
+    }
+    for song_name, song_url in songs.items():
+        st.subheader(f"🎧 {song_name}")
+        st.audio(song_url)
 
+# ========================
+# Mục MV yêu thích (Expander)
+# ========================
+with st.expander("🎬 MV yêu thích", expanded=False):
+    mvs = {
+        "Chạy Ngay Đi": "https://www.youtube.com/watch?v=32sYGCOYJUM",
+        "Hãy Trao Cho Anh": "https://www.youtube.com/watch?v=knW7-x7Y7RE",
+        "Nơi Này Có Anh": "https://www.youtube.com/watch?v=I3izrLn-sz8"
+    }
+    cols = st.columns(len(mvs))
+    for i, (mv_name, mv_url) in enumerate(mvs.items()):
+        with cols[i]:
+            st.subheader(f"📺 {mv_name}")
+            st.video(mv_url)
 
-st.header("📝 Góp ý của bạn")
-with st.form("feedback_form"):
-    name = st.text_input("Tên của bạn")
-    feedback = st.text_area("Cảm nhận của bạn về Sơn Tùng M-TP")
-    submitted = st.form_submit_button("Gửi")
-    if submitted:
-        st.write(f"💌 Cảm ơn **{name}** đã chia sẻ cảm nhận!")
+# ========================
+# Album (Expander)
+# ========================
+with st.expander("💿 Album & Single", expanded=False):
+    st.table({
+        "Năm": [2017, 2019, 2021],
+        "Tên Album/Single": ["Lạc Trôi", "Hãy Trao Cho Anh", "Muộn Rồi Mà Sao Còn"]
+    })
+
+# ========================
+# Fan quotes (Expander)
+# ========================
+with st.expander("💬 Fan Quotes", expanded=False):
+    quotes = [
+        "Sơn Tùng luôn là niềm tự hào của Sky 💙",
+        "Âm nhạc của anh là thanh xuân của tôi!",
+        "Mỗi bài hát đều mang một câu chuyện cảm xúc."
+    ]
+    for q in quotes:
+        st.success(q)
+
+# ========================
+# Form góp ý (Expander)
+# ========================
+with st.expander("📝 Góp ý của bạn", expanded=False):
+    with st.form("feedback_form"):
+        name = st.text_input("Tên của bạn")
+        feedback = st.text_area("Cảm nhận của bạn về Sơn Tùng M-TP")
+        submitted = st.form_submit_button("Gửi")
+        if submitted:
+            st.write(f"💌 Cảm ơn **{name}** đã chia sẻ cảm nhận!")
