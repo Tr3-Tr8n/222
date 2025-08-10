@@ -41,9 +41,7 @@ st.header("🎵 Bài hát yêu thích")
 
 
 
-for song_name, song_url in songs.items():
-    st.subheader(f"🎧 {song_name}")
-    st.audio(song_url)
+
 
 # ========================
 # Mục MV yêu thích
