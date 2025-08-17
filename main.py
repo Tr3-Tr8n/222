@@ -43,7 +43,7 @@ with col3:
 with col4:
     if st.button("🥗 Gỏi cuốn"):
         st.header("Gỏi cuốn")
-        st.image("https://upload.wikimedia.org/wikipedia/commons/7/77/Vietnamese_spring_rolls.jpg", width=400)
+        st.image("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSQRzdUXNnaiIBzv68FMhy3zN4nyeboM85SmzKmmsVKe9rBk4l15WPzWkyufb1x5Oryw3niyL7sWCdvgs0tXjz5Qb5hGQzSxx3bkMopNYzV", width=400)
         st.write("🌏 Xuất xứ: Việt Nam 🇻🇳")
         st.subheader("Nguyên liệu:")
         st.markdown("- Bánh tráng\n- Tôm, thịt\n- Bún\n- Rau sống, giá")
