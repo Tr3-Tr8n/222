@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("🍽️ Thực đơn trong ngày")
+st.title(" Thực đơn trong ngày")
 
 
 st.header("Bữa sáng")
@@ -20,7 +20,7 @@ st.header("Bữa tối")
 dinner_main_options = ["Thịt rang", "Cá chiên", "Gà nướng", "Bò lúc lắc", "Mực xào"]
 dinner_side_options = ["Canh cải", "Canh bí xanh", "Rau cải xào", "Canh khổ qua"]
 
-dinner_main = st.multiselect("Chọn 2 món mặn", dinner_main_options)
+dinner_main = st.multiselect("Chọn 2 món chính", dinner_main_options)
 dinner_side = st.multiselect("Chọn 1 món rau hoặc canh", dinner_side_options)
 
 
@@ -32,9 +32,9 @@ if st.button("📋 Xem thực đơn"):
     if len(lunch_main) == 2 and len(lunch_side) == 1:
         st.write("**Bữa trưa:**", ", ".join(lunch_main + lunch_side))
     else:
-        st.warning(" Bữa trưa: Cần chọn đúng 2 món mặn và 1 món rau/canh.")
+        st.warning(" Bữa trưa: Cần chọn đúng 2 món chính và 1 món rau/canh.")
 
     if len(dinner_main) == 2 and len(dinner_side) == 1:
         st.write("**Bữa tối:**", ", ".join(dinner_main + dinner_side))
     else:
-        st.warning(" Bữa tối: Cần chọn đúng 2 món mặn và 1 món rau/canh.")
+        st.warning(" Bữa tối: Cần chọn đúng 2 món chính và 1 món rau/canh.")
