@@ -12,7 +12,7 @@ st.header("Bữa trưa")
 lunch_main_options = ["Thịt kho tàu", "Cá kho", "Gà rán", "Thịt bò xào", "Tôm rim"]
 lunch_side_options = ["Canh chua", "Canh rau ngót", "Rau muống xào", "Bí đỏ hầm"]
 
-lunch_main = st.multiselect("Chọn 2 món mặn", lunch_main_options)
+lunch_main = st.multiselect("Chọn 2 món chính", lunch_main_options)
 lunch_side = st.multiselect("Chọn 1 món rau hoặc canh", lunch_side_options)
 
 
