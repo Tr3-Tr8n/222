@@ -45,4 +45,65 @@ theme = st.radio("Chọn chủ đề:", list(products.keys()))
 st.subheader(f"🧸 Danh sách mô hình {theme}")
 cols = st.columns(3)
 
-for idx, p in enumerat
+for idx, p in enumerate(products[theme]):
+    with cols[idx % 3]:
+        st.image(p["img"], caption=f'{p["name"]} ({p["id"]})', use_column_width=True)
+        st.write(f"💰 Giá: {p['price']:,} VNĐ")
+
+# =========================
+# Form đặt hàng
+# =========================
+st.header("📦 Đặt hàng")
+
+with st.form("order_form"):
+    model_theme = st.selectbox("Chủ đề", list(products.keys()))
+    model_id = st.text_input("Mã mô hình (ví dụ: DB01)")
+    qty = st.number_input("Số lượng", min_value=1, value=1)
+    name = st.text_input("Họ tên")
+    phone = st.text_input("Số điện thoại")
+    address = st.text_area("Địa chỉ giao hàng")
+    confirm = st.form_submit_button("✅ Xác nhận đặt hàng")
+
+# =========================
+# Hóa đơn
+# =========================
+if confirm:
+    # Tìm sản phẩm theo ID
+    selected_product = None
+    for p in products[model_theme]:
+        if p["id"].upper() == model_id.upper():
+            selected_product = p
+            break
+
+    if not selected_product:
+        st.error("❌ Mã mô hình không tồn tại. Vui lòng kiểm tra lại!")
+    else:
+        total = qty * selected_product["price"]
+        st.success("🎉 Đặt hàng thành công! Đây là hóa đơn của bạn:")
+
+        st.write("---")
+        st.write(f"**Khách hàng:** {name}")
+        st.write(f"📞 {phone}")
+        st.write(f"🏠 {address}")
+        st.write(f"**Sản phẩm:** {selected_product['name']} ({selected_product['id']})")
+        st.write(f"**Số lượng:** {qty}")
+        st.write(f"💰 **Tổng cộng:** {total:,} VNĐ")
+        st.write("---")
+
+        st.download_button(
+            "🖨️ In hóa đơn",
+            f"""
+            HÓA ĐƠN MUA HÀNG
+            ------------------------
+            Khách hàng: {name}
+            Điện thoại: {phone}
+            Địa chỉ: {address}
+
+            Sản phẩm: {selected_product['name']} ({selected_product['id']})
+            Số lượng: {qty}
+            Giá: {selected_product['price']:,} VNĐ
+            ------------------------
+            Tổng cộng: {total:,} VNĐ
+            """,
+            file_name="hoa_don.txt"
+        )
