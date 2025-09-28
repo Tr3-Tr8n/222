@@ -1,65 +1,48 @@
 import streamlit as st
 
+# =========================
 # Thông tin cửa hàng
-st.sidebar.title("🛒 Cửa hàng Mô Hình Anime")
-st.sidebar.write("Chuyên bán các mô hình nhân vật hoạt hình chất lượng cao.")
-st.sidebar.write("📍 Địa chỉ: 123 Đường ABC, TP.HCM")
-st.sidebar.write("📞 Hotline: 0909-123-456")
-st.sidebar.write("✉️ Email: lienhe@shopmohinh.vn")
+# =========================
+st.sidebar.title("🛒 Cửa Hàng Mô Hình Anime")
+st.sidebar.info(
+    """
+    **Liên hệ:**  
+    📍 Địa chỉ: 123 Anime Street, TP.HCM  
+    📞 Điện thoại: 0909 999 999  
+    📧 Email: shop@anime.vn  
+    """
+)
 
-st.title("✨ Cửa Hàng Mô Hình Anime ✨")
+st.title("✨ Cửa hàng mô hình nhân vật Anime ✨")
 st.write("Chọn chủ đề mô hình bạn yêu thích:")
 
-# Dữ liệu mẫu các mô hình
-models = {
+# =========================
+# Danh sách sản phẩm
+# =========================
+products = {
     "Dragon Ball": [
-        {"id": "DB01", "name": "Goku Super Saiyan", "img": "https://i.imgur.com/fXrxvY7.png"},
-        {"id": "DB02", "name": "Vegeta Super Saiyan", "img": "https://i.imgur.com/k0yZVqN.png"},
-        {"id": "DB03", "name": "Piccolo", "img": "https://i.imgur.com/xXv1WUn.png"}
+        {"id": "DB01", "name": "Goku Super Saiyan", "img": "https://i.imgur.com/GG7wLra.png", "price": 250000},
+        {"id": "DB02", "name": "Vegeta Blue", "img": "https://i.imgur.com/QvC7JvR.png", "price": 280000},
+        {"id": "DB03", "name": "Frieza Final Form", "img": "https://i.imgur.com/IVj9ubW.png", "price": 300000},
     ],
     "Naruto": [
-        {"id": "NA01", "name": "Naruto Sage Mode", "img": "https://i.imgur.com/dck0XGd.png"},
-        {"id": "NA02", "name": "Sasuke Sharingan", "img": "https://i.imgur.com/N7xqk4C.png"},
-        {"id": "NA03", "name": "Kakashi Hatake", "img": "https://i.imgur.com/2u8IxmH.png"}
+        {"id": "NA01", "name": "Naruto Sage Mode", "img": "https://i.imgur.com/BJxQ2bP.png", "price": 260000},
+        {"id": "NA02", "name": "Sasuke Sharingan", "img": "https://i.imgur.com/JRfXZcC.png", "price": 270000},
+        {"id": "NA03", "name": "Kakashi Hatake", "img": "https://i.imgur.com/3l5l4zL.png", "price": 290000},
     ],
     "One Piece": [
-        {"id": "OP01", "name": "Luffy Gear 4", "img": "https://i.imgur.com/6R6C7S9.png"},
-        {"id": "OP02", "name": "Zoro", "img": "https://i.imgur.com/cNoY9kd.png"},
-        {"id": "OP03", "name": "Sanji", "img": "https://i.imgur.com/fn8X2Yj.png"}
+        {"id": "OP01", "name": "Luffy Gear 4", "img": "https://i.imgur.com/rFfWc7X.png", "price": 320000},
+        {"id": "OP02", "name": "Zoro 3 Swords", "img": "https://i.imgur.com/dvF0O2n.png", "price": 310000},
+        {"id": "OP03", "name": "Sanji Black Leg", "img": "https://i.imgur.com/NzD5Zdn.png", "price": 280000},
     ]
 }
 
-# Nút chọn chủ đề
-choice = st.radio("📌 Chọn bộ sưu tập:", ["Dragon Ball", "Naruto", "One Piece"])
+# =========================
+# Chọn chủ đề
+# =========================
+theme = st.radio("Chọn chủ đề:", list(products.keys()))
 
-st.subheader(f"🖼 Danh sách mô hình: {choice}")
+st.subheader(f"🧸 Danh sách mô hình {theme}")
 cols = st.columns(3)
 
-for i, model in enumerate(models[choice]):
-    with cols[i]:
-        st.image(model["img"], caption=f"{model['id']} - {model['name']}", use_column_width=True)
-
-# Đặt hàng
-st.subheader("📝 Đặt Hàng")
-with st.form("order_form"):
-    theme = st.selectbox("Chọn bộ sưu tập", list(models.keys()))
-    model_id = st.selectbox("Chọn mã mô hình", [m["id"] for m in models[theme]])
-    quantity = st.number_input("Số lượng", min_value=1, value=1)
-    name = st.text_input("Họ tên")
-    phone = st.text_input("Số điện thoại")
-    address = st.text_area("Địa chỉ giao hàng")
-    confirm = st.form_submit_button("Xác nhận đặt hàng")
-
-    if confirm:
-        model_name = [m["name"] for m in models[theme] if m["id"] == model_id][0]
-        st.success("✅ Đặt hàng thành công!")
-        st.write("### 🧾 Hóa đơn")
-        st.write(f"Khách hàng: **{name}**")
-        st.write(f"SĐT: {phone}")
-        st.write(f"Địa chỉ: {address}")
-        st.write(f"Sản phẩm: {model_name} ({model_id})")
-        st.write(f"Số lượng: {quantity}")
-        st.write(f"Thành tiền: {quantity * 300000} VNĐ")  # giả sử giá 300k/sp
-        st.download_button("📥 In hóa đơn", 
-                           data=f"Hóa đơn mua hàng\nKhách hàng: {name}\nSĐT: {phone}\nĐịa chỉ: {address}\nSản phẩm: {model_name} ({model_id})\nSố lượng: {quantity}\nThành tiền: {quantity * 300000} VNĐ",
-                           file_name="hoa_don.txt")
+for idx, p in enumerat
