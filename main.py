@@ -1,7 +1,5 @@
 import csv
-from prettytable import PrettyTable  # dùng để in bảng đẹp
-
-# 🧾 Điền thông tin thời tiết bạn tra được từ accuweather.com tại đây:
+from prettytable import PrettyTable 
 data = [
     {
         "Thành phố": "Hà Nội",
@@ -54,7 +52,7 @@ with open(filename, mode="w", newline="", encoding="utf-8") as file:
     writer.writeheader()
     writer.writerows(data)
 
-# 🧱 Tạo bảng hiển thị 5 cột
+\
 table = PrettyTable()
 table.field_names = ["Thành phố", "Tình hình thời tiết", "Nhiệt độ (°C)", "Độ ẩm (%)", "Tốc độ gió (km/h)", "Chất lượng không khí"]
 
