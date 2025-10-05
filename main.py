@@ -1,109 +1,68 @@
-import streamlit as st
+import csv
+from prettytable import PrettyTable  # dùng để in bảng đẹp
 
-# =========================
-# Thông tin cửa hàng
-# =========================
-st.sidebar.title("🛒 Cửa Hàng Mô Hình Anime")
-st.sidebar.info(
-    """
-    **Liên hệ:**  
-    📍 Địa chỉ: 123 Anime Street, TP.HCM  
-    📞 Điện thoại: 0909 999 999  
-    📧 Email: shop@anime.vn  
-    """
-)
+# 🧾 Điền thông tin thời tiết bạn tra được từ accuweather.com tại đây:
+data = [
+    {
+        "Thành phố": "Hà Nội",
+        "Tình hình thời tiết": "Nhiều mây",
+        "Nhiệt độ (°C)": 31,
+        "Độ ẩm (%)": 70,
+        "Tốc độ gió (km/h)": 10,
+        "Chất lượng không khí": 45
+    },
+    {
+        "Thành phố": "Hồ Chí Minh",
+        "Tình hình thời tiết": "Nắng nhẹ",
+        "Nhiệt độ (°C)": 33,
+        "Độ ẩm (%)": 65,
+        "Tốc độ gió (km/h)": 12,
+        "Chất lượng không khí": 40
+    },
+    {
+        "Thành phố": "Hải Phòng",
+        "Tình hình thời tiết": "Có mưa rào",
+        "Nhiệt độ (°C)": 29,
+        "Độ ẩm (%)": 80,
+        "Tốc độ gió (km/h)": 8,
+        "Chất lượng không khí": 50
+    },
+    {
+        "Thành phố": "Đà Nẵng",
+        "Tình hình thời tiết": "Trời quang",
+        "Nhiệt độ (°C)": 32,
+        "Độ ẩm (%)": 60,
+        "Tốc độ gió (km/h)": 14,
+        "Chất lượng không khí": 42
+    },
+    {
+        "Thành phố": "Cần Thơ",
+        "Tình hình thời tiết": "Nhiều mây",
+        "Nhiệt độ (°C)": 30,
+        "Độ ẩm (%)": 75,
+        "Tốc độ gió (km/h)": 11,
+        "Chất lượng không khí": 47
+    }
+]
 
-st.title("✨ Cửa hàng mô hình nhân vật Anime ✨")
-st.write("Chọn chủ đề mô hình bạn yêu thích:")
+# 📂 Tên file CSV
+filename = "weather_data.csv"
 
-# =========================
-# Danh sách sản phẩm
-# =========================
-products = {
-    "Dragon Ball": [
-        {"id": "DB01", "name": "Goku Super Saiyan", "img": "https://i.imgur.com/GG7wLra.png", "price": 250000},
-        {"id": "DB02", "name": "Vegeta Blue", "img": "https://i.imgur.com/QvC7JvR.png", "price": 280000},
-        {"id": "DB03", "name": "Frieza Final Form", "img": "https://i.imgur.com/IVj9ubW.png", "price": 300000},
-    ],
-    "Naruto": [
-        {"id": "NA01", "name": "Naruto Sage Mode", "img": "https://i.imgur.com/BJxQ2bP.png", "price": 260000},
-        {"id": "NA02", "name": "Sasuke Sharingan", "img": "https://i.imgur.com/JRfXZcC.png", "price": 270000},
-        {"id": "NA03", "name": "Kakashi Hatake", "img": "https://i.imgur.com/3l5l4zL.png", "price": 290000},
-    ],
-    "One Piece": [
-        {"id": "OP01", "name": "Luffy Gear 4", "img": "https://i.imgur.com/rFfWc7X.png", "price": 320000},
-        {"id": "OP02", "name": "Zoro 3 Swords", "img": "https://i.imgur.com/dvF0O2n.png", "price": 310000},
-        {"id": "OP03", "name": "Sanji Black Leg", "img": "https://i.imgur.com/NzD5Zdn.png", "price": 280000},
-    ]
-}
+# ✍️ Ghi dữ liệu vào file CSV
+with open(filename, mode="w", newline="", encoding="utf-8") as file:
+    writer = csv.DictWriter(file, fieldnames=data[0].keys())
+    writer.writeheader()
+    writer.writerows(data)
 
-# =========================
-# Chọn chủ đề
-# =========================
-theme = st.radio("Chọn chủ đề:", list(products.keys()))
+# 🧱 Tạo bảng hiển thị 5 cột
+table = PrettyTable()
+table.field_names = ["Thành phố", "Tình hình thời tiết", "Nhiệt độ (°C)", "Độ ẩm (%)", "Tốc độ gió (km/h)", "Chất lượng không khí"]
 
-st.subheader(f"🧸 Danh sách mô hình {theme}")
-cols = st.columns(3)
+for row in data:
+    table.add_row([row["Thành phố"], row["Tình hình thời tiết"], row["Nhiệt độ (°C)"], 
+                   row["Độ ẩm (%)"], row["Tốc độ gió (km/h)"], row["Chất lượng không khí"]])
 
-for idx, p in enumerate(products[theme]):
-    with cols[idx % 3]:
-        st.image(p["img"], caption=f'{p["name"]} ({p["id"]})', use_column_width=True)
-        st.write(f"💰 Giá: {p['price']:,} VNĐ")
-
-# =========================
-# Form đặt hàng
-# =========================
-st.header("📦 Đặt hàng")
-
-with st.form("order_form"):
-    model_theme = st.selectbox("Chủ đề", list(products.keys()))
-    model_id = st.text_input("Mã mô hình (ví dụ: DB01)")
-    qty = st.number_input("Số lượng", min_value=1, value=1)
-    name = st.text_input("Họ tên")
-    phone = st.text_input("Số điện thoại")
-    address = st.text_area("Địa chỉ giao hàng")
-    confirm = st.form_submit_button("✅ Xác nhận đặt hàng")
-
-# =========================
-# Hóa đơn
-# =========================
-if confirm:
-    # Tìm sản phẩm theo ID
-    selected_product = None
-    for p in products[model_theme]:
-        if p["id"].upper() == model_id.upper():
-            selected_product = p
-            break
-
-    if not selected_product:
-        st.error("❌ Mã mô hình không tồn tại. Vui lòng kiểm tra lại!")
-    else:
-        total = qty * selected_product["price"]
-        st.success("🎉 Đặt hàng thành công! Đây là hóa đơn của bạn:")
-
-        st.write("---")
-        st.write(f"**Khách hàng:** {name}")
-        st.write(f"📞 {phone}")
-        st.write(f"🏠 {address}")
-        st.write(f"**Sản phẩm:** {selected_product['name']} ({selected_product['id']})")
-        st.write(f"**Số lượng:** {qty}")
-        st.write(f"💰 **Tổng cộng:** {total:,} VNĐ")
-        st.write("---")
-
-        st.download_button(
-            "🖨️ In hóa đơn",
-            f"""
-            HÓA ĐƠN MUA HÀNG
-            ------------------------
-            Khách hàng: {name}
-            Điện thoại: {phone}
-            Địa chỉ: {address}
-
-            Sản phẩm: {selected_product['name']} ({selected_product['id']})
-            Số lượng: {qty}
-            Giá: {selected_product['price']:,} VNĐ
-            ------------------------
-            Tổng cộng: {total:,} VNĐ
-            """,
-            file_name="hoa_don.txt"
-        )
+# 🖥️ In kết quả ra màn hình
+print("✅ DỮ LIỆU THỜI TIẾT CÁC THÀNH PHỐ\n")
+print(table)
+print(f"\n📁 Dữ liệu đã được lưu trong file '{filename}' thành công!")
