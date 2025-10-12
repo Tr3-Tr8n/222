@@ -19,3 +19,25 @@ data = pd.read_csv("score.csv", index_col=0)
 st.title("Thông tin thời tiết các thành phố")
 st.dataframe(data)
 # 2
+
+
+# Tạo dữ liệu
+data = {
+    "Thời gian": ["12-05-2023", "26-05-2023", "30-05-2023", "10-06-2023", "25-06-2023"],
+    "Nội dung": [
+        "Phù! Cuối cùng cũng thi xong rồi.",
+        "Kết quả khá tốt nha.",
+        "Hẹn gặp lại các bạn sau hè.",
+        "Nước xanh quá.",
+        "Huhu, cao quá, muốn về cơ."
+    ],
+    "Địa điểm": ["Hà Nội", "Hà Nội", "Hà Nội", "Nha Trang", "Sơn La"],
+    "Cảm xúc": ["😰", "🥰", "🤗", "🥳", "😱"]
+}
+
+# Tạo DataFrame
+df = pd.DataFrame(data)
+
+# Hiển thị trên Streamlit
+st.title("Bảng dữ liệu phần khám phá 2")
+st.dataframe(df)
