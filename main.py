@@ -1,23 +1,23 @@
 import pandas as pd
 import streamlit as st
-cities = ["Hà Nội", "Hồ Chí Minh", "Hải Phòng", "Đà Nẵng", "Cần Thơ"]
-weather_data = [
-    ["Nắng nhẹ", 32, 60, "10 km/h", "Tốt"],
-    ["Trời nhiều mây", 30, 70, "8 km/h", "Trung bình"],
-    ["Mưa rào", 28, 85, "12 km/h", "Tốt"],
-    ["Nắng nóng", 34, 55, "9 km/h", "Trung bình"],
-    ["Mưa nhẹ", 29, 80, "11 km/h", "Tốt"]
-]
-df = pd.DataFrame(
-    weather_data,
-    columns=["Tình hình thời tiết", "Nhiệt độ (°C)", "Độ ẩm (%)", "Tốc độ gió", "Chất lượng không khí"],
-    index=cities
-)
-pd.set_option('display.max_columns', None)
-df.to_csv("score.csv")
 
-st.title("Thông tin thời tiết các thành phố")
-st.dataframe(data)
+# Tạo dữ liệu thời tiết
+data = {
+    "Thành phố": ["Hà Nội", "Hồ Chí Minh", "Hải Phòng", "Đà Nẵng", "Cần Thơ"],
+    "Tình hình thời tiết": ["Nắng", "Mây rải rác", "Mưa nhẹ", "Nhiều mây", "Nắng nhẹ"],
+    "Nhiệt độ (°C)": [31, 33, 29, 30, 32],
+    "Độ ẩm (%)": [60, 65, 70, 68, 66],
+    "Tốc độ gió (km/h)": [10, 8, 12, 9, 7],
+    "Chất lượng không khí (AQI)": [45, 55, 50, 42, 48]
+}
+
+# Tạo DataFrame
+df = pd.DataFrame(data)
+
+# Hiển thị trên Streamlit
+st.title("🌤️ Bảng Dữ Liệu Thời Tiết Các Thành Phố Việt Nam")
+st.dataframe(df)
+
 # 2
 
 
