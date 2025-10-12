@@ -1,66 +1,33 @@
-import csv
-from prettytable import PrettyTable 
-data = [
-    {
-        "Thành phố": "Hà Nội",
-        "Tình hình thời tiết": "Nhiều mây",
-        "Nhiệt độ (°C)": 31,
-        "Độ ẩm (%)": 70,
-        "Tốc độ gió (km/h)": 10,
-        "Chất lượng không khí": 45
-    },
-    {
-        "Thành phố": "Hồ Chí Minh",
-        "Tình hình thời tiết": "Nắng nhẹ",
-        "Nhiệt độ (°C)": 33,
-        "Độ ẩm (%)": 65,
-        "Tốc độ gió (km/h)": 12,
-        "Chất lượng không khí": 40
-    },
-    {
-        "Thành phố": "Hải Phòng",
-        "Tình hình thời tiết": "Có mưa rào",
-        "Nhiệt độ (°C)": 29,
-        "Độ ẩm (%)": 80,
-        "Tốc độ gió (km/h)": 8,
-        "Chất lượng không khí": 50
-    },
-    {
-        "Thành phố": "Đà Nẵng",
-        "Tình hình thời tiết": "Trời quang",
-        "Nhiệt độ (°C)": 32,
-        "Độ ẩm (%)": 60,
-        "Tốc độ gió (km/h)": 14,
-        "Chất lượng không khí": 42
-    },
-    {
-        "Thành phố": "Cần Thơ",
-        "Tình hình thời tiết": "Nhiều mây",
-        "Nhiệt độ (°C)": 30,
-        "Độ ẩm (%)": 75,
-        "Tốc độ gió (km/h)": 11,
-        "Chất lượng không khí": 47
-    }
+import pandas as pd
+import streamlit as st
+
+# Tạo danh sách các thành phố
+cities = ["Hà Nội", "Hồ Chí Minh", "Hải Phòng", "Đà Nẵng", "Cần Thơ"]
+
+# Dữ liệu mẫu
+weather_data = [
+    ["Nắng nhẹ", 32, 60, "10 km/h", "Tốt"],
+    ["Trời nhiều mây", 30, 70, "8 km/h", "Trung bình"],
+    ["Mưa rào", 28, 85, "12 km/h", "Tốt"],
+    ["Nắng nóng", 34, 55, "9 km/h", "Trung bình"],
+    ["Mưa nhẹ", 29, 80, "11 km/h", "Tốt"]
 ]
 
-# 📂 Tên file CSV
-filename = "weather_data.csv"
+# Tạo DataFrame
+df = pd.DataFrame(
+    weather_data,
+    columns=["Tình hình thời tiết", "Nhiệt độ (°C)", "Độ ẩm (%)", "Tốc độ gió", "Chất lượng không khí"],
+    index=cities
+)
 
-# ✍️ Ghi dữ liệu vào file CSV
-with open(filename, mode="w", newline="", encoding="utf-8") as file:
-    writer = csv.DictWriter(file, fieldnames=data[0].keys())
-    writer.writeheader()
-    writer.writerows(data)
+pd.set_option('display.max_columns', None)
 
-\
-table = PrettyTable()
-table.field_names = ["Thành phố", "Tình hình thời tiết", "Nhiệt độ (°C)", "Độ ẩm (%)", "Tốc độ gió (km/h)", "Chất lượng không khí"]
+# Lưu DataFrame ra CSV
+df.to_csv("score.csv")
 
-for row in data:
-    table.add_row([row["Thành phố"], row["Tình hình thời tiết"], row["Nhiệt độ (°C)"], 
-                   row["Độ ẩm (%)"], row["Tốc độ gió (km/h)"], row["Chất lượng không khí"]])
+# Đọc lại dữ liệu từ CSV
+data = pd.read_csv("score.csv", index_col=0)
 
-# 🖥️ In kết quả ra màn hình
-print("✅ DỮ LIỆU THỜI TIẾT CÁC THÀNH PHỐ\n")
-print(table)
-print(f"\n📁 Dữ liệu đã được lưu trong file '{filename}' thành công!")
+# Hiển thị trên Streamlit
+st.title("Thông tin thời tiết các thành phố")
+st.dataframe(data)

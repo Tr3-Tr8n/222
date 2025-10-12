@@ -591,6 +591,7 @@ name = "python-template"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "pandas" },
     { name = "prettytable" },
     { name = "pygame" },
     { name = "streamlit" },
@@ -598,6 +599,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "pandas", specifier = ">=2.3.1" },
     { name = "prettytable", specifier = ">=3.16.0" },
     { name = "pygame", specifier = ">=2.6.1" },
     { name = "streamlit", specifier = ">=1.47.1" },
