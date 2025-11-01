@@ -1,43 +1,19 @@
 import pandas as pd
 import streamlit as st
 
-# Tạo dữ liệu thời tiết
+# Tạo dữ liệu
 data = {
-    "Thành phố": ["Hà Nội", "Hồ Chí Minh", "Hải Phòng", "Đà Nẵng", "Cần Thơ"],
-    "Tình hình thời tiết": ["Nắng", "Mây rải rác", "Mưa nhẹ", "Nhiều mây", "Nắng nhẹ"],
-    "Nhiệt độ (°C)": [31, 33, 29, 30, 32],
-    "Độ ẩm (%)": [60, 65, 70, 68, 66],
-    "Tốc độ gió (km/h)": [10, 8, 12, 9, 7],
-    "Chất lượng không khí (AQI)": [45, 55, 50, 42, 48]
+    "Tên phim": ["The Godfather", "12 Angry Men", "Pulp Fiction", "Joker", "Avatar"],
+    "Rating": [9.2, 9.0, 8.9, 8.5, 7.9]
 }
-
-# Tạo DataFrame
-df = pd.DataFrame(data)
-
-# Hiển thị trên Streamlit
-st.title("🌤️ Bảng Dữ Liệu Thời Tiết Các Thành Phố Việt Nam")
-st.dataframe(df)
-
-# 2
-
-
-
-data = {
-    "Thời gian": ["12-05-2023", "26-05-2023", "30-05-2023", "10-06-2023", "25-06-2023"],
-    "Nội dung": [
-        "Phù! Cuối cùng cũng thi xong rồi.",
-        "Kết quả khá tốt nha.",
-        "Hẹn gặp lại các bạn sau hè.",
-        "Nước xanh quá.",
-        "Huhu, cao quá, muốn về cơ."
-    ],
-    "Địa điểm": ["Hà Nội", "Hà Nội", "Hà Nội", "Nha Trang", "Sơn La"],
-    "Cảm xúc": ["😰", "🥰", "🤗", "🥳", "😱"]
-}
-
 
 df = pd.DataFrame(data)
 
+# Sắp xếp theo Rating giảm dần và lấy Top 5
+top5 = df.sort_values(by="Rating", ascending=False).head(5)
 
-st.title("Bảng dữ liệu phần khám phá 2")
-st.dataframe(df)
+# Tiêu đề ứng dụng
+st.title("TOP 5 PHIM CÓ RATING CAO NHẤT")
+
+# Set Tên phim làm trục Y và Rating làm trục X
+st.bar_chart(top5.set_index("Tên phim"))
