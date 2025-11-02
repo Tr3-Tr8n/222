@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 
-st.title("🎬 Top 5 bộ phim có doanh thu cao nhất ")
+st.title(" Top 5 bộ phim có doanh thu cao nhất ")
 
 
 data = {
