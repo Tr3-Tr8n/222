@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
 
-# Tiêu đề
+
 st.title("🎬 Top 5 bộ phim có doanh thu cao nhất ")
 
-# Tạo bộ dữ liệu
+
 data = {
     "Tên phim": [
         "Avatar",
@@ -18,10 +18,10 @@ data = {
 
 df = pd.DataFrame(data)
 
-# Hiển thị bảng dữ liệu
-st.subheader("📊 Bảng dữ liệu")
+
+st.subheader(" Bảng dữ liệu")
 st.dataframe(df)
 
 # Biểu đồ cột
-st.subheader("📈 Biểu đồ doanh thu ")
+st.subheader(" Biểu đồ doanh thu ")
 st.bar_chart(df.set_index("Tên phim"))
