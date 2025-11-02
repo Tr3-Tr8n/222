@@ -1,31 +1,27 @@
 import streamlit as st
 import pandas as pd
 
-# Dữ liệu phim
+# Tiêu đề
+st.title("🎬 Top 5 bộ phim có doanh thu cao nhất mọi thời đại")
+
+# Tạo bộ dữ liệu
 data = {
     "Tên phim": [
-        "The Godfather",
-        "12 Angry Men",
-        "Pulp Fiction",
-        "Joker",
-        "Avatar"
+        "Avatar",
+        "Avengers: Endgame",
+        "Titanic",
+        "Star Wars: The Force Awakens",
+        "Avengers: Infinity War"
     ],
-    "Rating": [9.2, 9.0, 8.9, 8.5, 7.9]
+    "Doanh thu (tỷ USD)": [2.92, 2.80, 2.26, 2.07, 2.05]
 }
 
-# Tạo DataFrame
 df = pd.DataFrame(data)
 
-# Sắp xếp giảm dần theo rating và lấy top 5
-top5 = df.sort_values(by="Rating", ascending=False).head(5)
-
-# Tiêu đề
-st.title("Top 5 phim có Rating cao nhất")
-
 # Hiển thị bảng dữ liệu
-st.dataframe(top5)
+st.subheader("📊 Bảng dữ liệu")
+st.dataframe(df)
 
-# Vẽ biểu đồ cột
-st.bar_chart(
-    top5.set_index("Tên phim")["Rating"]
-)
+# Biểu đồ cột
+st.subheader("📈 Biểu đồ doanh thu phim")
+st.bar_chart(df.set_index("Tên phim"))
