@@ -1,27 +1,37 @@
-import streamlit as st
 import pandas as pd
-
-
-st.title(" Top 5 bộ phim có doanh thu cao nhất ")
+import streamlit as st
 
 
 data = {
-    "Tên phim": [
-        "Avatar",
-        "Avengers: Endgame",
-        "Titanic",
-        "Star Wars: The Force Awakens",
-        "Avengers: Infinity War"
-    ],
-    "Doanh thu ": [2.92, 2.80, 2.26, 2.07, 2.05]
+    "Tên khách hàng": ["DƯƠNG NGỌC BẢO TRÂN", "TRẦN THỊ MINH TÂM", "VÕ THIỆN TÍN"],
+    "Gói sản phẩm": ["A", "B", "C"],
+    "Số lượng": [2, 1, 3],
+    "Giá gói": [100000, 500000, 50000],
+    "Thành tiền": [200000, 500000, 150000]
 }
 
 df = pd.DataFrame(data)
 
+# --- THÊM DÒNG MỚI ---
+new_row = {
+    "Tên khách hàng": "NGUYỄN NHẬT NAM",
+    "Gói sản phẩm": "D",
+    "Số lượng": 1,
+    "Giá gói": 300000,
+    "Thành tiền": 300000
+}
+df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
-st.subheader(" Bảng dữ liệu")
-st.dataframe(df)
+# --- TÍNH TỔNG THÀNH TIỀN ---
+tong_thanh_tien = df["Thành tiền"].sum()
 
-# Biểu đồ cột
-st.subheader(" Biểu đồ doanh thu ")
-st.bar_chart(df.set_index("Tên phim"))
+# --- SẮP XẾP THEO GIÁ GÓI TĂNG DẦN ---
+df_sorted = df.sort_values(by="Giá gói", ascending=True)
+
+# --- GIAO DIỆN STREAMLIT ---
+st.title("📊 Quản lý đơn hàng khách hàng")
+
+st.subheader("Dữ liệu đơn hàng (đã cập nhật)")
+st.dataframe(df_sorted, use_container_width=True)
+
+st.markdown(f"### 💰 Tổng thành tiền nhận được: **{tong_thanh_tien:,} VND**")
