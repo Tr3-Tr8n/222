@@ -1,37 +1,29 @@
 import pandas as pd
 import streamlit as st
 
+# Tải dữ liệu
+df = pd.read_csv("StudentsPerformance.csv")
 
-data = {
-    "Tên khách hàng": ["DƯƠNG NGỌC BẢO TRÂN", "TRẦN THỊ MINH TÂM", "VÕ THIỆN TÍN"],
-    "Gói sản phẩm": ["A", "B", "C"],
-    "Số lượng": [2, 1, 3],
-    "Giá gói": [100000, 500000, 50000],
-    "Thành tiền": [200000, 500000, 150000]
-}
+st.title("Kiểm tra dữ liệu bị thiếu")
 
-df = pd.DataFrame(data)
+# 1. Số lượng missing ban đầu
+missing_before = df.isnull().sum()
 
-# --- THÊM DÒNG MỚI ---
-new_row = {
-    "Tên khách hàng": "NGUYỄN NHẬT NAM",
-    "Gói sản phẩm": "D",
-    "Số lượng": 1,
-    "Giá gói": 300000,
-    "Thành tiền": 300000
-}
-df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+# 2. Xử lý dữ liệu bị thiếu
+df_clean = df.fillna("Unknown")
 
-# --- TÍNH TỔNG THÀNH TIỀN ---
-tong_thanh_tien = df["Thành tiền"].sum()
+# 3. Số lượng missing sau khi xử lý
+missing_after = df_clean.isnull().sum()
 
-# --- SẮP XẾP THEO GIÁ GÓI TĂNG DẦN ---
-df_sorted = df.sort_values(by="Giá gói", ascending=True)
+# 4. Gộp 2 cột vào 1 bảng
+missing_table = pd.DataFrame({
+    "Missing trước xử lý": missing_before,
+    "Missing sau xử lý": missing_after
+})
 
-# --- GIAO DIỆN STREAMLIT ---
-st.title("📊 Quản lý đơn hàng khách hàng")
+st.subheader("Bảng so sánh dữ liệu thiếu trước và sau xử lý")
+st.write(missing_table)
 
-st.subheader("Dữ liệu đơn hàng (đã cập nhật)")
-st.dataframe(df_sorted, use_container_width=True)
-
-st.markdown(f"### 💰 Tổng thành tiền nhận được: **{tong_thanh_tien:,} VND**")
+# 5. Hiển thị bảng dữ liệu sạch
+st.subheader("Bảng dữ liệu sau khi xử lý thiếu")
+st.write(df_clean)
