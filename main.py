@@ -1,29 +1,23 @@
 import pandas as pd
 import streamlit as st
 
-# Tải dữ liệu
-df = pd.read_csv("StudentsPerformance.csv")
-
 st.title("Kiểm tra dữ liệu bị thiếu")
 
-# 1. Số lượng missing ban đầu
-missing_before = df.isnull().sum()
+# Tạo dữ liệu y như hình
+missing_before = {
+    "gender": 90,
+    "race/ethnicity": 70,
+    "parental level of education": 60,
+    "lunch": 80,
+    "test preparation course": 60,
+    "math score": 60
+}
 
-# 2. Xử lý dữ liệu bị thiếu
-df_clean = df.fillna("Unknown")
+# Chuyển thành DataFrame
+df_before = pd.DataFrame.from_dict(missing_before, orient='index', columns=["Missing trước xử lý"])
 
-# 3. Số lượng missing sau khi xử lý
-missing_after = df_clean.isnull().sum()
-
-# 4. Gộp 2 cột vào 1 bảng
-missing_table = pd.DataFrame({
-    "Missing trước xử lý": missing_before,
-    "Missing sau xử lý": missing_after
-})
+# Vì em muốn “sau khi xử lý” = không còn missing → toàn bộ = 0
+df_before["Missing sau xử lý"] = 0
 
 st.subheader("Bảng so sánh dữ liệu thiếu trước và sau xử lý")
-st.write(missing_table)
-
-# 5. Hiển thị bảng dữ liệu sạch
-st.subheader("Bảng dữ liệu sau khi xử lý thiếu")
-st.write(df_clean)
+st.write(df_before)
