@@ -21,3 +21,20 @@ df_before["Missing sau xử lý"] = 0
 
 st.subheader("Bảng so sánh dữ liệu thiếu trước và sau xử lý")
 st.write(df_before)
+
+# Tạo dữ liệu y như hình
+missing_before = {
+    
+    "reading score": 80,
+    "wringt score": 60,
+    "math score": 60
+}
+
+# Chuyển thành DataFrame
+df_before = pd.DataFrame.from_dict(missing_before, orient='index', columns=["Missing trước xử lý"])
+
+# Vì em muốn “sau khi xử lý” = không còn missing → toàn bộ = 0
+df_before["Missing sau xử lý"] = 0
+
+st.subheader("Bảng so sánh dữ liệu thiếu trước và sau xử lý")
+st.write(df_before)
