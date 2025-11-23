@@ -25,9 +25,9 @@ st.write(df_before)
 # Tạo dữ liệu y như hình
 missing_before = {
     
-    "reading score": 80,
-    "wringt score": 60,
-    "math score": 60
+    "reading score":120,
+    "wringt score": 160,
+    "math score": 180
 }
 
 # Chuyển thành DataFrame
