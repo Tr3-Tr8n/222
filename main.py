@@ -1,40 +1,57 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 
-st.title("Kiểm tra dữ liệu bị thiếu")
+st.title("📊 Phân tích dữ liệu mô tả – Streamlit + Pandas")
 
-# Tạo dữ liệu y như hình
-missing_before = {
-    "gender": 90,
-    "race/ethnicity": 70,
-    "parental level of education": 60,
-    "lunch": 80,
-    "test preparation course": 60,
-    "math score": 60
+# =======================
+# 1. TẠO DATAFRAME TỪ DỮ LIỆU
+# =======================
+
+data = {
+    "Chất lượng khối lượng": [
+        3,4,2,3,2,3,4,2,1,3,2,4,4,2,3,1,2,2,3,3,2,3,5,3,5,5,2,4,5,4,
+        3,3,3,4,4,4,2,5,5,2,4,2,4,3,1,5,1,3
+    ],
+    "Tham gia": [
+        4,3,1,2,5,2,4,4,2,5,4,4,2,5,3,1,1,2,2,4,3,4,2,2,1,1,1,4,3,2,
+        5,2,5,5,2,4,2,2,4,2,2,4,3,2,1,1,5,2
+    ],
+    "Mức độ stress": [
+        3,2,4,3,3,1,5,1,2,4,3,1,2,4,4,2,3,4,2,3,2,3,1,1,5,1,2,5,5,3,
+        1,3,2,5,4,3,5,5,4,4,2,3,1,3,1,3,1,2
+    ]
 }
 
-# Chuyển thành DataFrame
-df_before = pd.DataFrame.from_dict(missing_before, orient='index', columns=["Missing trước xử lý"])
+df = pd.DataFrame(data)
 
-# Vì em muốn “sau khi xử lý” = không còn missing → toàn bộ = 0
-df_before["Missing sau xử lý"] = 0
+# =======================
+# 2. HIỂN THỊ DỮ LIỆU
+# =======================
 
-st.subheader("Bảng so sánh dữ liệu thiếu trước và sau xử lý")
-st.write(df_before)
+st.subheader("📌 Dữ liệu ban đầu")
+st.dataframe(df)
 
-# Tạo dữ liệu y như hình
-missing_before = {
-    
-    "reading score":120,
-    "wringt score": 160,
-    "math score": 180
-}
+# =======================
+# 3. THỐNG KÊ MÔ TẢ
+# =======================
 
-# Chuyển thành DataFrame
-df_before = pd.DataFrame.from_dict(missing_before, orient='index', columns=["Missing trước xử lý"])
+st.subheader("📌 Thống kê mô tả")
+st.write(df.describe())
 
-# Vì em muốn “sau khi xử lý” = không còn missing → toàn bộ = 0
-df_before["Missing sau xử lý"] = 0
+# =======================
+# 4. BIỂU ĐỒ PHÂN PHỐI (BAR CHART)
+# =======================
 
-st.subheader("Bảng so sánh dữ liệu thiếu trước và sau xử lý")
-st.write(df_before)
+st.subheader("📌 Biểu đồ phân phối dữ liệu")
+selected_col = st.selectbox("Chọn cột để xem biểu đồ:", df.columns)
+st.bar_chart(df[selected_col])
+
+# =======================
+# 5. BIỂU ĐỒ TƯƠNG QUAN (SCATTER)
+# =======================
+
+st.subheader("📌 Biểu đồ tương quan giữa hai biến")
+x = st.selectbox("Chọn biến X:", df.columns, key="x")
+y = st.selectbox("Chọn biến Y:", df.columns, key="y")
+
+st.scatter_chart(df[[x, y]])
