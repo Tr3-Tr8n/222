@@ -31,25 +31,29 @@ df = pd.DataFrame(data)
 # =======================
 # 2. HIỂN THỊ DỮ LIỆU
 # =======================
-st.subheader("📌 Dữ liệu gốc")
+
+st.subheader("📌 Dữ liệu ban đầu")
 st.dataframe(df)
 
 # =======================
 # 3. THỐNG KÊ MÔ TẢ
 # =======================
+
 st.subheader("📌 Thống kê mô tả")
 st.write(df.describe())
 
 # =======================
 # 4. BIỂU ĐỒ PHÂN PHỐI (BAR CHART)
 # =======================
-st.subheader("📌 Biểu đồ phân phối theo từng cột")
-col = st.selectbox("Chọn cột:", df.columns)
-st.bar_chart(df[col])
+
+st.subheader("📌 Biểu đồ phân phối dữ liệu")
+selected_col = st.selectbox("Chọn cột để xem biểu đồ:", df.columns)
+st.bar_chart(df[selected_col])
 
 # =======================
 # 5. BIỂU ĐỒ TƯƠNG QUAN (SCATTER)
 # =======================
+
 st.subheader("📌 Biểu đồ tương quan giữa hai biến")
 x = st.selectbox("Chọn biến X:", df.columns, key="x")
 y = st.selectbox("Chọn biến Y:", df.columns, key="y")
