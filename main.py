@@ -72,4 +72,4 @@ with col2:
     st.markdown("### 🪙 Rẻ nhất")
     st.write(df.loc[df['Giá bán/m2'].idxmin()])
 
-st.success("✔️ Hoàn thành phân tích dữ liệu")
+
