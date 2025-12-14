@@ -3,7 +3,7 @@ import pandas as pd
 
 st.set_page_config(page_title="Phân tích dữ liệu nhà ở", layout="wide")
 
-st.title("📊 PHÂN TÍCH DỮ LIỆU NHÀ Ở (KHÔNG DÙNG read_csv)")
+st.title("📊 PHÂN TÍCH DỮ LIỆU NHÀ Ở ")
 
 # 1. Tạo dữ liệu trực tiếp trong code
 data = {
