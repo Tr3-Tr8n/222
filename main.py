@@ -4,10 +4,12 @@ import pandas as pd
 import os
 
 # =========================
-# XÓA DATABASE CŨ (nếu có)
+# XÓA DATABASE CŨ (chỉ lần đầu để đảm bảo cấu trúc đúng)
 # =========================
-if os.path.exists("tasks.db"):
-    os.remove("tasks.db")
+if "db_initialized" not in st.session_state:
+    st.session_state["db_initialized"] = True
+    if os.path.exists("tasks.db"):
+        os.remove("tasks.db")
 
 # =========================
 # KẾT NỐI DATABASE
@@ -88,7 +90,9 @@ if menu == "Thêm Task":
         else:
             add_task(name, description, status, str(start_date), str(due_date), assignee, note)
             st.success("✅ Task đã được thêm")
-            st.experimental_rerun()
+            st.experimental_rerun = lambda: None  # bỏ rerun
+            st.session_state["refresh"] = not st.session_state.get("refresh", False)  # dùng session_state
+            st.experimental_rerun() if "experimental_rerun" in dir(st) else None
 
 # =========================
 # DANH SÁCH TASK
@@ -117,4 +121,3 @@ if menu == "Danh sách Task":
         if st.button("Delete Task"):
             delete_task(delete_id)
             st.success("Task đã bị xóa")
-            st.experimental_rerun()
