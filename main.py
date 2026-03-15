@@ -3,12 +3,12 @@ import sqlite3
 import pandas as pd
 
 # =========================
-# DATABASE
+# KẾT NỐI DATABASE
 # =========================
-
 conn = sqlite3.connect("tasks.db", check_same_thread=False)
 cursor = conn.cursor()
 
+# TẠO BẢNG
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS tasks(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,7 +46,7 @@ def get_tasks():
 
     data = cursor.fetchall()
 
-    columns = [i[0] for i in cursor.description]
+    columns = [col[0] for col in cursor.description]
 
     df = pd.DataFrame(data,columns=columns)
 
@@ -85,7 +85,7 @@ menu = st.sidebar.selectbox(
 
 
 # =========================
-# ADD TASK
+# THÊM TASK
 # =========================
 
 if menu == "Thêm Task":
@@ -97,8 +97,8 @@ if menu == "Thêm Task":
     description = st.text_area("Mô tả *")
 
     status = st.selectbox(
-    "Trạng thái",
-    ["Đang làm","Hoàn thành","Tạm dừng"]
+        "Trạng thái",
+        ["Đang làm","Hoàn thành","Tạm dừng"]
     )
 
     start_date = st.date_input("Ngày bắt đầu")
@@ -117,13 +117,13 @@ if menu == "Thêm Task":
         else:
 
             add_task(
-            name,
-            description,
-            status,
-            str(start_date),
-            str(due_date),
-            assignee,
-            note
+                name,
+                description,
+                status,
+                str(start_date),
+                str(due_date),
+                assignee,
+                note
             )
 
             st.success("✅ Task đã được thêm")
@@ -132,7 +132,7 @@ if menu == "Thêm Task":
 
 
 # =========================
-# TASK LIST
+# DANH SÁCH TASK
 # =========================
 
 if menu == "Danh sách Task":
@@ -142,41 +142,34 @@ if menu == "Danh sách Task":
     df = get_tasks()
 
     if df.empty:
-
         st.info("Chưa có task")
 
     else:
 
-        st.write("✏️ Bạn có thể chỉnh sửa trực tiếp trong bảng")
-
         edited_df = st.data_editor(
-        df,
-        use_container_width=True,
-        num_rows="dynamic"
+            df,
+            use_container_width=True,
+            num_rows="dynamic"
         )
 
-        # SAVE BUTTON
         if st.button("💾 Save Changes"):
 
             for index,row in edited_df.iterrows():
 
                 update_task(
-                row["id"],
-                row["name"],
-                row["description"],
-                row["status"],
-                row["start_date"],
-                row["due_date"],
-                row["assignee"],
-                row["note"]
+                    row["id"],
+                    row["name"],
+                    row["description"],
+                    row["status"],
+                    row["start_date"],
+                    row["due_date"],
+                    row["assignee"],
+                    row["note"]
                 )
 
-            st.success("✅ Đã lưu thay đổi")
+            st.success("Đã lưu thay đổi")
 
         st.divider()
-
-        # DELETE TASK
-        st.subheader("❌ Xóa Task")
 
         delete_id = st.number_input("Nhập ID task cần xóa",step=1)
 
