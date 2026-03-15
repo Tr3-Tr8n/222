@@ -3,8 +3,9 @@ import sqlite3
 import pandas as pd
 
 # =========================
-# KẾT NỐI DATABASE
+# DATABASE
 # =========================
+
 conn = sqlite3.connect("tasks.db", check_same_thread=False)
 cursor = conn.cursor()
 
@@ -20,11 +21,12 @@ assignee TEXT,
 note TEXT
 )
 """)
+
 conn.commit()
 
 
 # =========================
-# HÀM DATABASE
+# FUNCTIONS
 # =========================
 
 def add_task(name,description,status,start_date,due_date,assignee,note):
@@ -41,11 +43,12 @@ def add_task(name,description,status,start_date,due_date,assignee,note):
 def get_tasks():
 
     cursor.execute("SELECT * FROM tasks")
+
     data = cursor.fetchall()
 
-    columns=[i[0] for i in cursor.description]
+    columns = [i[0] for i in cursor.description]
 
-    df=pd.DataFrame(data,columns=columns)
+    df = pd.DataFrame(data,columns=columns)
 
     return df
 
@@ -68,46 +71,47 @@ def delete_task(id):
 
 
 # =========================
-# GIAO DIỆN
+# UI
 # =========================
 
 st.set_page_config(page_title="Task Manager",layout="wide")
 
 st.title("📋 Task Manager")
 
-menu=st.sidebar.selectbox(
+menu = st.sidebar.selectbox(
 "Menu",
 ["Thêm Task","Danh sách Task"]
 )
 
+
 # =========================
-# THÊM TASK
+# ADD TASK
 # =========================
 
-if menu=="Thêm Task":
+if menu == "Thêm Task":
 
     st.subheader("➕ Thêm công việc")
 
-    name=st.text_input("Tên task *")
+    name = st.text_input("Tên task *")
 
-    description=st.text_area("Mô tả *")
+    description = st.text_area("Mô tả *")
 
-    status=st.selectbox(
+    status = st.selectbox(
     "Trạng thái",
     ["Đang làm","Hoàn thành","Tạm dừng"]
     )
 
-    start_date=st.date_input("Ngày bắt đầu")
+    start_date = st.date_input("Ngày bắt đầu")
 
-    due_date=st.date_input("Ngày kết thúc")
+    due_date = st.date_input("Ngày kết thúc")
 
-    assignee=st.text_input("Người phụ trách *")
+    assignee = st.text_input("Người phụ trách *")
 
-    note=st.text_area("Ghi chú")
+    note = st.text_area("Ghi chú")
 
     if st.button("Thêm Task"):
 
-        if name=="" or description=="" or assignee=="":
+        if name == "" or description == "" or assignee == "":
             st.error("⚠️ Phải nhập đầy đủ thông tin")
 
         else:
@@ -122,20 +126,20 @@ if menu=="Thêm Task":
             note
             )
 
-            st.success("✅ Thêm task thành công")
+            st.success("✅ Task đã được thêm")
 
             st.rerun()
 
 
 # =========================
-# DANH SÁCH TASK
+# TASK LIST
 # =========================
 
-if menu=="Danh sách Task":
+if menu == "Danh sách Task":
 
     st.subheader("📊 Danh sách công việc")
 
-    df=get_tasks()
+    df = get_tasks()
 
     if df.empty:
 
@@ -143,41 +147,43 @@ if menu=="Danh sách Task":
 
     else:
 
-        edited_df=st.data_editor(
+        st.write("✏️ Bạn có thể chỉnh sửa trực tiếp trong bảng")
+
+        edited_df = st.data_editor(
         df,
         use_container_width=True,
         num_rows="dynamic"
         )
 
-        col1,col2=st.columns(2)
+        # SAVE BUTTON
+        if st.button("💾 Save Changes"):
 
-        with col1:
+            for index,row in edited_df.iterrows():
 
-            if st.button("💾 Lưu chỉnh sửa"):
+                update_task(
+                row["id"],
+                row["name"],
+                row["description"],
+                row["status"],
+                row["start_date"],
+                row["due_date"],
+                row["assignee"],
+                row["note"]
+                )
 
-                for index,row in edited_df.iterrows():
+            st.success("✅ Đã lưu thay đổi")
 
-                    update_task(
-                    row["id"],
-                    row["name"],
-                    row["description"],
-                    row["status"],
-                    row["start_date"],
-                    row["due_date"],
-                    row["assignee"],
-                    row["note"]
-                    )
+        st.divider()
 
-                st.success("Đã cập nhật dữ liệu")
+        # DELETE TASK
+        st.subheader("❌ Xóa Task")
 
-        with col2:
+        delete_id = st.number_input("Nhập ID task cần xóa",step=1)
 
-            delete_id=st.number_input("Nhập ID task cần xóa",step=1)
+        if st.button("Delete Task"):
 
-            if st.button("❌ Xóa Task"):
+            delete_task(delete_id)
 
-                delete_task(delete_id)
+            st.success("Task đã bị xóa")
 
-                st.success("Đã xóa task")
-
-                st.rerun()
+            st.rerun()
