@@ -1,123 +1,77 @@
 import streamlit as st
-import sqlite3
-import pandas as pd
-import os
+import requests
 
-# =========================
-# XÓA DATABASE CŨ (chỉ lần đầu để đảm bảo cấu trúc đúng)
-# =========================
-if "db_initialized" not in st.session_state:
-    st.session_state["db_initialized"] = True
-    if os.path.exists("tasks.db"):
-        os.remove("tasks.db")
+# ===== CONFIG =====
+API_KEY = "YOUR_API_KEY"
 
-# =========================
-# KẾT NỐI DATABASE
-# =========================
-conn = sqlite3.connect("tasks.db", check_same_thread=False)
-cursor = conn.cursor()
+st.set_page_config(page_title="Weather App", layout="wide")
 
-# =========================
-# TẠO BẢNG TASKS
-# =========================
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS tasks(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    description TEXT NOT NULL,
-    status TEXT,
-    start_date TEXT,
-    due_date TEXT,
-    assignee TEXT NOT NULL,
-    note TEXT
-)
-""")
-conn.commit()
+# ===== CSS (cho đẹp giống hình) =====
+st.markdown("""
+    <style>
+    .main {
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        color: white;
+    }
+    .card {
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# =========================
-# HÀM DATABASE
-# =========================
-def add_task(name, description, status, start_date, due_date, assignee, note):
-    cursor.execute("""
-    INSERT INTO tasks (name, description, status, start_date, due_date, assignee, note)
-    VALUES (?,?,?,?,?,?,?)
-    """, (name, description, status, start_date, due_date, assignee, note))
-    conn.commit()
+# ===== TITLE =====
+st.title("🌤 Weather App")
 
-def get_tasks():
-    cursor.execute("SELECT * FROM tasks")
-    data = cursor.fetchall()
-    columns = [col[0] for col in cursor.description]
-    df = pd.DataFrame(data, columns=columns)
-    return df
+# ===== SEARCH =====
+city = st.text_input("🔍 Enter city:", "Hanoi")
 
-def update_task(id, name, description, status, start_date, due_date, assignee, note):
-    cursor.execute("""
-    UPDATE tasks
-    SET name=?, description=?, status=?, start_date=?, due_date=?, assignee=?, note=?
-    WHERE id=?
-    """, (name, description, status, start_date, due_date, assignee, note, id))
-    conn.commit()
+# ===== FUNCTION =====
+def get_weather(city):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+    res = requests.get(url)
+    return res.json()
 
-def delete_task(id):
-    cursor.execute("DELETE FROM tasks WHERE id=?", (id,))
-    conn.commit()
+# ===== MAIN =====
+if city:
+    data = get_weather(city)
 
-# =========================
-# GIAO DIỆN
-# =========================
-st.set_page_config(page_title="Task Manager", layout="wide")
-st.title("📋 Task Manager")
+    if data.get("cod") == 200:
+        temp = data["main"]["temp"]
+        desc = data["weather"][0]["description"]
+        humidity = data["main"]["humidity"]
+        wind = data["wind"]["speed"]
 
-menu = st.sidebar.selectbox("Menu", ["Thêm Task", "Danh sách Task"])
+        # ===== DISPLAY =====
+        col1, col2, col3 = st.columns(3)
 
-# =========================
-# THÊM TASK
-# =========================
-if menu == "Thêm Task":
-    st.subheader("➕ Thêm công việc")
-    name = st.text_input("Tên Task *")
-    description = st.text_area("Mô tả *")
-    status = st.selectbox("Trạng thái", ["Đang làm", "Hoàn thành", "Tạm dừng"])
-    start_date = st.date_input("Ngày bắt đầu")
-    due_date = st.date_input("Ngày kết thúc")
-    assignee = st.text_input("Người phụ trách *")
-    note = st.text_area("Ghi chú / Link")
+        with col1:
+            st.markdown(f"""
+            <div class="card">
+                <h2>{city}</h2>
+                <h1>{temp}°C</h1>
+                <p>{desc}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-    if st.button("Thêm Task"):
-        if name.strip() == "" or description.strip() == "" or assignee.strip() == "":
-            st.error("⚠️ Phải nhập đầy đủ thông tin")
-        else:
-            add_task(name, description, status, str(start_date), str(due_date), assignee, note)
-            st.success("✅ Task đã được thêm")
-            st.experimental_rerun = lambda: None  # bỏ rerun
-            st.session_state["refresh"] = not st.session_state.get("refresh", False)  # dùng session_state
-            st.experimental_rerun() if "experimental_rerun" in dir(st) else None
+        with col2:
+            st.markdown(f"""
+            <div class="card">
+                <h3>💧 Humidity</h3>
+                <h2>{humidity}%</h2>
+            </div>
+            """, unsafe_allow_html=True)
 
-# =========================
-# DANH SÁCH TASK
-# =========================
-if menu == "Danh sách Task":
-    st.subheader("📊 Danh sách công việc")
-    df = get_tasks()
-    if df.empty:
-        st.info("Chưa có task nào")
+        with col3:
+            st.markdown(f"""
+            <div class="card">
+                <h3>🌬 Wind</h3>
+                <h2>{wind} m/s</h2>
+            </div>
+            """, unsafe_allow_html=True)
+
     else:
-        st.write("✏️ Chỉnh sửa trực tiếp trong bảng nếu cần")
-        edited_df = st.data_editor(df, use_container_width=True, num_rows="dynamic")
-
-        # SAVE BUTTON
-        if st.button("💾 Save Changes"):
-            for index, row in edited_df.iterrows():
-                update_task(row["id"], row["name"], row["description"], row["status"],
-                            row["start_date"], row["due_date"], row["assignee"], row["note"])
-            st.success("✅ Đã lưu thay đổi")
-
-        st.divider()
-
-        # DELETE TASK
-        st.subheader("❌ Xóa Task")
-        delete_id = st.number_input("Nhập ID task cần xóa", step=1)
-        if st.button("Delete Task"):
-            delete_task(delete_id)
-            st.success("Task đã bị xóa")
+        st.error("❌ City not found!")
