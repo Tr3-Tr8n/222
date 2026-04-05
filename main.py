@@ -1,77 +1,70 @@
 import streamlit as st
 import requests
 
-# ===== CONFIG =====
-API_KEY = "YOUR_API_KEY"
+# CONFIG PAGE
+st.set_page_config(page_title="Weather App", layout="centered")
 
-st.set_page_config(page_title="Weather App", layout="wide")
-
-# ===== CSS (cho đẹp giống hình) =====
-st.markdown("""
+# BACKGROUND CSS
+st.markdown(
+    """
     <style>
-    .main {
-        background: linear-gradient(to right, #4facfe, #00f2fe);
+    .stApp {
+        background: linear-gradient(to right, #1e3c72, #2a5298);
         color: white;
+        font-family: 'Segoe UI', sans-serif;
     }
-    .card {
+    .weather-card {
+        background: rgba(255,255,255,0.1);
         padding: 20px;
-        border-radius: 15px;
-        background: rgba(255,255,255,0.2);
+        border-radius: 20px;
+        text-align: center;
         backdrop-filter: blur(10px);
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.3);
+    }
+    .title {
+        font-size: 40px;
+        font-weight: bold;
         text-align: center;
     }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-# ===== TITLE =====
-st.title("🌤 Weather App")
+# TITLE
+st.markdown('<div class="title">🌤 Weather App</div>', unsafe_allow_html=True)
 
-# ===== SEARCH =====
-city = st.text_input("🔍 Enter city:", "Hanoi")
+# INPUT
+city = st.text_input("Enter city name")
 
-# ===== FUNCTION =====
+API_KEY = "YOUR_API_KEY"
+
+# API FUNCTION
 def get_weather(city):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
-    res = requests.get(url)
-    return res.json()
+    return requests.get(url).json()
 
-# ===== MAIN =====
+# DISPLAY
 if city:
     data = get_weather(city)
 
-    if data.get("cod") == 200:
+    if data["cod"] == 200:
         temp = data["main"]["temp"]
-        desc = data["weather"][0]["description"]
         humidity = data["main"]["humidity"]
-        wind = data["wind"]["speed"]
+        desc = data["weather"][0]["description"]
+        icon = data["weather"][0]["icon"]
 
-        # ===== DISPLAY =====
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.markdown(f"""
-            <div class="card">
+        st.markdown(
+            f"""
+            <div class="weather-card">
                 <h2>{city}</h2>
+                <img src="http://openweathermap.org/img/wn/{icon}@2x.png">
                 <h1>{temp}°C</h1>
                 <p>{desc}</p>
+                <p>💧 Humidity: {humidity}%</p>
             </div>
-            """, unsafe_allow_html=True)
-
-        with col2:
-            st.markdown(f"""
-            <div class="card">
-                <h3>💧 Humidity</h3>
-                <h2>{humidity}%</h2>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with col3:
-            st.markdown(f"""
-            <div class="card">
-                <h3>🌬 Wind</h3>
-                <h2>{wind} m/s</h2>
-            </div>
-            """, unsafe_allow_html=True)
-
+            """,
+            unsafe_allow_html=True
+        )
     else:
-        st.error("❌ City not found!")
+        st.error("City not found")
