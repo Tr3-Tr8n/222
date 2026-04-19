@@ -89,3 +89,68 @@ if city:
 
     else:
         st.warning("❌ City not found or API key not ready")
+        forecast = get_forecast(city)
+
+        if str(forecast.get("cod")) == "200":
+
+            # ===== PREPARE DATA =====
+            dates = []
+            temps = []
+
+            for item in forecast["list"]:
+                date = item["dt_txt"].split(" ")[0]
+                temp = item["main"]["temp"]
+
+                dates.append(date)
+                temps.append(temp)
+
+            df = pd.DataFrame({"date": dates, "temp": temps})
+
+            # ===== GROUP BY DAY =====
+            daily = df.groupby("date").mean().reset_index()
+
+            # ===== CONVERT TO X, Y =====
+            daily["day_num"] = range(len(daily))
+            X = daily["day_num"]
+            Y = daily["temp"]
+
+            # ===== LINEAR REGRESSION (manual) =====
+            n = len(X)
+            mean_x = X.mean()
+            mean_y = Y.mean()
+
+            numerator = ((X - mean_x) * (Y - mean_y)).sum()
+            denominator = ((X - mean_x)**2).sum()
+
+            m = numerator / denominator   # slope
+            b = mean_y - m * mean_x       # intercept
+
+            # ===== PREDICT NEXT DAYS =====
+            future_days = []
+            future_temps = []
+
+            last_day = X.iloc[-1]
+
+            for i in range(2):  # thêm 2 ngày → tổng 7 ngày
+                new_x = last_day + i + 1
+                pred = m * new_x + b
+
+                future_days.append(f"Day+{i+1}")
+                future_temps.append(pred)
+
+            pred_df = pd.DataFrame({
+                "date": list(daily["date"]) + future_days,
+                "temp": list(daily["temp"]) + future_temps
+            })
+
+            # ===== DISPLAY =====
+            st.subheader("🤖 AI 7-Day Prediction")
+            st.line_chart(pred_df.set_index("date"))
+
+            st.dataframe(pred_df)
+
+            # ===== ACCURACY (simple confidence) =====
+            error = abs(Y - (m*X + b)).mean()
+            confidence = max(0, 100 - error*5)
+
+            st.metric("AI Confidence", f"{confidence:.1f}%")
