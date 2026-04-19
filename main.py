@@ -145,7 +145,7 @@ if str(forecast.get("cod")) == "200":
     })
 
     # ===== DISPLAY =====
-    st.subheader("🤖 AI 7-Day Prediction")
+    st.subheader(" AI 7-Day Prediction")
     st.line_chart(pred_df.set_index("date"))
 
     st.dataframe(pred_df)
@@ -154,4 +154,4 @@ if str(forecast.get("cod")) == "200":
     error = abs(Y - (m*X + b)).mean()
     confidence = max(0, 100 - error*5)
 
-    st.metric("AI Confidence", f"{confidence:.1f}%")
+   
