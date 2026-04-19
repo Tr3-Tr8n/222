@@ -4,7 +4,7 @@ import pandas as pd
 
 st.set_page_config(page_title="Weather Lite", layout="wide")
 
-API_KEY = "YOUR_NEW_API_KEY"   # ← thay key
+API_KEY = "e86853326847343e8313ca9b65fe7bbc"   # ← thay key
 
 # ===== STYLE =====
 st.markdown("""
