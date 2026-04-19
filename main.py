@@ -4,9 +4,8 @@ import pandas as pd
 
 st.set_page_config(page_title="Weather Lite", layout="wide")
 
-API_KEY = "e86853326847343e8313ca9b65fe7bbc"   # ← thay key
+API_KEY = "e86853326847343e8313ca9b65fe7bbc"  
 
-# ===== STYLE =====
 st.markdown("""
 <style>
 [data-testid="stAppViewContainer"] {
@@ -16,14 +15,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ===== SETTINGS =====
 st.sidebar.title("⚙ Settings")
 
 unit = st.sidebar.radio("Unit", ["Celsius","Fahrenheit"])
 unit_api = "metric" if unit=="Celsius" else "imperial"
 unit_sym = "°C" if unit=="Celsius" else "°F"
 
-# ===== FUNCTIONS =====
 def get_weather(city):
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units={unit_api}"
     return requests.get(url).json()
@@ -32,7 +29,6 @@ def get_forecast(city):
     url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units={unit_api}"
     return requests.get(url).json()
 
-# ===== UI =====
 st.title("🌤 Weather App (Lite)")
 
 city = st.text_input("Enter city", "London")
@@ -48,7 +44,6 @@ if city:
         desc = data["weather"][0]["description"]
         icon = data["weather"][0]["icon"]
 
-        # ===== CURRENT =====
         col1, col2 = st.columns(2)
 
         with col1:
@@ -61,7 +56,6 @@ if city:
             st.metric("Humidity", f"{humidity}%")
             st.metric("Wind", f"{wind}")
 
-        # ===== FORECAST =====
         forecast = get_forecast(city)
 
         if str(forecast.get("cod")) == "200":
@@ -94,7 +88,6 @@ forecast = get_forecast(city)
 
 if str(forecast.get("cod")) == "200":
 
-    # ===== PREPARE DATA =====
     dates = []
     temps = []
 
@@ -107,15 +100,12 @@ if str(forecast.get("cod")) == "200":
 
     df = pd.DataFrame({"date": dates, "temp": temps})
 
-    # ===== GROUP BY DAY =====
     daily = df.groupby("date").mean().reset_index()
 
-    # ===== CONVERT TO X, Y =====
     daily["day_num"] = range(len(daily))
     X = daily["day_num"]
     Y = daily["temp"]
 
-    # ===== LINEAR REGRESSION (manual) =====
     n = len(X)
     mean_x = X.mean()
     mean_y = Y.mean()
@@ -123,16 +113,15 @@ if str(forecast.get("cod")) == "200":
     numerator = ((X - mean_x) * (Y - mean_y)).sum()
     denominator = ((X - mean_x)**2).sum()
 
-    m = numerator / denominator   # slope
-    b = mean_y - m * mean_x       # intercept
+    m = numerator / denominator   
+    b = mean_y - m * mean_x       
 
-    # ===== PREDICT NEXT DAYS =====
     future_days = []
     future_temps = []
 
     last_day = X.iloc[-1]
 
-    for i in range(2):  # thêm 2 ngày → tổng 7 ngày
+    for i in range(2):  
         new_x = last_day + i + 1
         pred = m * new_x + b
 
@@ -144,13 +133,11 @@ if str(forecast.get("cod")) == "200":
         "temp": list(daily["temp"]) + future_temps
     })
 
-    # ===== DISPLAY =====
     st.subheader(" AI 7-Day Prediction")
     st.line_chart(pred_df.set_index("date"))
 
     st.dataframe(pred_df)
 
-    # ===== ACCURACY (simple confidence) =====
     error = abs(Y - (m*X + b)).mean()
     confidence = max(0, 100 - error*5)
 
